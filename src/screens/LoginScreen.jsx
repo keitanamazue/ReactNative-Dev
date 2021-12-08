@@ -1,11 +1,13 @@
 import { NavigationHelpersContext } from "@react-navigation/core";
 import React, { useState } from "react";
+import firebase from "firebase";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Button from "../components/Button";
 
@@ -13,6 +15,23 @@ export default function LoginScreen(props) {
   const { navigation } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  function handlePress() {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const { user } = userCredential;
+        console.log(user.uid);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "SignUp" }],
+        });
+      })
+      .catch((error) => {
+        Alert.alert(error.message);
+      });
+  }
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -38,15 +57,7 @@ export default function LoginScreen(props) {
           textContentType="password"
         />
 
-        <Button
-          label="submit"
-          onPress={() =>
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "MemoList" }],
-            })
-          }
-        />
+        <Button label="submit" onPress={handlePress} />
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Not Registered?</Text>

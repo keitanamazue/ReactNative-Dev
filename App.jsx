@@ -25,7 +25,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="MemoList"
         screenOptions={{
           headerStyle: { backgroundColor: "#467FD3" },
           headerTitleStyle: { color: "#ffffff" },

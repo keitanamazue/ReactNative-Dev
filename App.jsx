@@ -14,7 +14,6 @@ import { firebaseConfig } from "./env";
 
 require("firebase/firestore");
 
-
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -25,7 +24,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="MemoList"
+        initialRouteName="Login"
         screenOptions={{
           headerStyle: { backgroundColor: "#467FD3" },
           headerTitleStyle: { color: "#ffffff" },

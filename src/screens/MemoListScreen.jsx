@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, Text } from "react-native";
 import CircleButton from "../components/CircleButton";
 import LogOutButton from "../components/LogOutButton";
 import MemoList from "../components/MemoList";
+import Button from "../components/Button";
 
 export default function MemoListScreen(props) {
   const { navigation } = props;
@@ -26,7 +27,6 @@ export default function MemoListScreen(props) {
         (snapshot) => {
           const userMemos = [];
           snapshot.forEach((doc) => {
-            console.log(doc.id, doc.data());
             const data = doc.data();
             userMemos.push({
               id: doc.id,
@@ -37,13 +37,29 @@ export default function MemoListScreen(props) {
           setMemos(userMemos);
         },
         (error) => {
-          console.log(error);
           Alert.alert("Error", error.message);
         }
       );
     }
     return unsubscribe;
   }, []);
+
+  if (memos.length === 0) {
+    return (
+      <View style={emptyStyles.container}>
+        <View style={emptyStyles.inner}>
+          <Text style={emptyStyles.title}>nothing memo</Text>
+          <Button
+            style={emptyStyles.button}
+            label="create memo"
+            onPress={() => {
+              navigation.navigate("MemoCreate");
+            }}
+          ></Button>
+        </View>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <MemoList memos={memos} />
@@ -61,5 +77,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#eee",
+  },
+});
+
+const emptyStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  inner: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  title: {
+    fontSize: 18,
+    marginBottom: 24,
+  },
+
+  button: {
+    alignSelf: "center",
   },
 });

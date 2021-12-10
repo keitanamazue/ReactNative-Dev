@@ -20,7 +20,6 @@ export default function MemoDetailScreen(props) {
       const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
 
       unsubscribe = ref.onSnapshot((doc) => {
-        console.log(doc.id, doc.data(), currentUser.uid);
         const data = doc.data();
         setMemo({
           id: doc.id,

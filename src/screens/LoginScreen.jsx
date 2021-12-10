@@ -1,4 +1,3 @@
-import { NavigationHelpersContext } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import firebase from "firebase";
 import {
@@ -34,7 +33,6 @@ export default function LoginScreen(props) {
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const { user } = userCredential;
-        console.log(user.uid);
         navigation.reset({
           index: 0,
           routes: [{ name: "SignUp" }],

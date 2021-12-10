@@ -1,12 +1,21 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
+import { shape, string, instanceOf, arrayOf } from "prop-types";
 
-export default function MemoList() {
+export default function MemoList(props) {
   const navigation = useNavigation();
-  return (
-    <View>
+  const { memos } = props;
+
+  function renderItem({ item }) {
+    return (
       <TouchableOpacity
         style={styles.memoListItem}
         onPress={() => {
@@ -14,8 +23,10 @@ export default function MemoList() {
         }}
       >
         <View>
-          <Text style={styles.memoListItemTitle}>買い物リスト</Text>
-          <Text style={styles.memoListItemDate}>2021/11/11</Text>
+          <Text style={styles.memoListItemTitle} numberOfLines>
+            {item.bodyText}
+          </Text>
+          <Text style={styles.memoListItemDate}>{String(item.updatedAt)}</Text>
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -26,9 +37,28 @@ export default function MemoList() {
           <Feather name="x" size={16} color="#B0B0B0" />
         </TouchableOpacity>
       </TouchableOpacity>
+    );
+  }
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={memos}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 }
+
+MemoList.propTypes = {
+  memos: arrayOf(
+    shape({
+      id: string,
+      bodyText: string,
+      updatedAt: instanceOf(Date),
+    })
+  ).isRequired,
+};
 
 const styles = StyleSheet.create({
   memoListItem: {
@@ -55,5 +85,9 @@ const styles = StyleSheet.create({
 
   memoDelete: {
     padding: 8,
+  },
+
+  container: {
+    flex: 1,
   },
 });

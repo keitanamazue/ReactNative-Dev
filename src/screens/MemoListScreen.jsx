@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase";
 import { View, StyleSheet, Alert } from "react-native";
 import CircleButton from "../components/CircleButton";
@@ -7,6 +7,7 @@ import MemoList from "../components/MemoList";
 
 export default function MemoListScreen(props) {
   const { navigation } = props;
+  const [memos, setMemos] = useState([]);
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => <LogOutButton />,
@@ -23,9 +24,17 @@ export default function MemoListScreen(props) {
         .orderBy("updatedAt", "desc");
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
+          const userMemos = [];
           snapshot.forEach((doc) => {
             console.log(doc.id, doc.data());
+            const data = doc.data();
+            userMemos.push({
+              id: doc.id,
+              bodyText: data.bodyText,
+              updatedAt: data.updatedAt.toDate(),
+            });
           });
+          setMemos(userMemos);
         },
         (error) => {
           console.log(error);
@@ -37,7 +46,7 @@ export default function MemoListScreen(props) {
   }, []);
   return (
     <View style={styles.container}>
-      <MemoList />
+      <MemoList memos={memos} />
       <CircleButton
         name="plus"
         onPress={() => {
